@@ -1,6 +1,6 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-
+import { watch, ref } from 'vue';
+const inputBuscador = ref("")
 const productos = ref(
   [{
     "product": {
@@ -73,9 +73,14 @@ const productos = ref(
       }
     ]
   }])
+
+watch(inputBuscador, () => {
+  console.log(inputBuscador.value)
+})
 </script>
 
 <template>
+  <input type="text" v-model="inputBuscador">
   <table class="styled-table">
     <thead>
       <tr>
@@ -107,27 +112,32 @@ const productos = ref(
   font-family: sans-serif;
   text-align: left;
 }
+
 .styled-table thead tr {
   background-color: #42b883;
   color: #ffffff;
   text-align: left;
 }
+
 .styled-table th,
 .styled-table td {
   padding: 12px 15px;
 }
+
 .styled-table tbody tr {
   border-bottom: 1px solid #dddddd;
 }
+
 .styled-table tbody tr:nth-of-type(even) {
   background-color: #f3f3f3;
 }
+
 .styled-table tbody tr:last-of-type {
   border-bottom: 2px solid #35495e;
 }
+
 .styled-table ul {
   list-style-type: none;
   padding: 0;
 }
 </style>
-
