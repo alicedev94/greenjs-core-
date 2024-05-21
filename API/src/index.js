@@ -69,7 +69,7 @@ const generateRandomDetails = () => {
 };
 
 // Datos aleatorios de ejemplo
-let numDatos = 3;
+let numDatos = 100;
 for (let i = 0; i <= numDatos; i++) {
   const dato = {
     product: generateRandomProduct(),

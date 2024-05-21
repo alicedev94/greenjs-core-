@@ -3,9 +3,12 @@ import { watch, onMounted, ref } from 'vue'
 import axios from 'axios'
 
 const inputBuscador = ref("")
-
 const productos = ref([])
 let productosOriginales;
+
+// Agregamos la variable de estado para el control de la paginación
+const paginaActual = ref(1)
+const elementosPorPagina = ref(10)
 
 // FUNCIONES LOCALES DE LA TABLA
 const obtenerProductos = async () => {
@@ -24,15 +27,10 @@ const buscadorProductos = () => {
   }
 }
 
-// FUNCIONES PARA PRUEBAS
-function mostrar2() {
-  productos.value = productos.value.slice(0, 2)
+// Función para cambiar la página
+const cambiarPagina = (numPagina) => {
+  paginaActual.value = numPagina
 }
-
-function mostrarTodo() {
-  productos.value = productosOriginales
-}
-// ELIMINAR DESPUES DE SU USO, FIN DEL BLOQUE
 
 // ESTA FUNCION SE EJECUTA AL RECARGAR LA PAGINA.
 onMounted(async () => {
@@ -60,7 +58,7 @@ watch(inputBuscador, () => {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="producto in productos" :key="producto.codigo">
+      <tr v-for="producto in productos.slice((paginaActual - 1) * elementosPorPagina, paginaActual * elementosPorPagina)" :key="producto.codigo">
         <td>{{ producto.product.Codigo }} - {{ producto.product.Nombre }}</td>
         <td>
           <ul>
@@ -73,9 +71,12 @@ watch(inputBuscador, () => {
     </tbody>
   </table>
 
-  <!-- BOTON DE PRUEBAS ELIMINAR DESPUES DE USAR -->
-  <button class="estilo-boton" @click="mostrar2">MOSTRAR 2</button>
-  <button class="estilo-boton" @click="mostrarTodo">MOSTAR TODO</button>
+  <!-- PAGINACION -->
+  <div class="paginacion">
+    <button v-for="pagina in Math.ceil(productos.length / elementosPorPagina)" :key="pagina" @click="cambiarPagina(pagina)">
+      {{ pagina }}
+    </button>
+  </div>
 </template>
 
 <style scoped>
@@ -129,9 +130,23 @@ watch(inputBuscador, () => {
   margin-bottom: 0.2rem;
 }
 
-.estilo-boton {
-  background-color: gray;
-  color: floralwhite;
-  margin: 10px 10px;
+/* ESTILOS PARA LA PAGINACION */
+.paginacion {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.paginacion button {
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #42b883;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.paginacion button:hover {
+  background-color: #35495e;
 }
 </style>
